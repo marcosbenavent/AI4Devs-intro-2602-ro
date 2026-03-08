@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inversión de texto | AI4Devs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f0f14;
+            --bg-card: #1a1a24;
+            --accent: #00d4aa;
+            --accent-hover: #00f5c4;
+            --text-primary: #e8e8ed;
+            --text-muted: #8888a0;
+            --border: #2a2a3a;
+            --shadow: rgba(0, 212, 170, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px var(--shadow);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 300;
+            margin-bottom: 1.75rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        #textoEntrada {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-family: inherit;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        #textoEntrada:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.15);
+        }
+
+        #textoEntrada::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        .resultado-wrapper {
+            margin-top: 1.5rem;
+        }
+
+        .resultado-linea {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        #resultado {
+            flex: 1;
+            min-width: 0;
+            padding: 1rem 1.25rem;
+            font-family: inherit;
+            font-size: 1.1rem;
+            color: var(--accent);
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            min-height: 52px;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        #resultado.actualizado {
+            animation: pulse 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.85; transform: scale(0.99); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .btn {
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.25s ease, transform 0.1s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-copiar {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        .btn-copiar:hover {
+            background: var(--accent-hover);
+        }
+
+        #btnInvertir {
+            margin-top: 1.25rem;
+            background: linear-gradient(135deg, #2a2a3a, #1f1f2e);
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            opacity: 0;
+            visibility: hidden;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease, max-height 0.35s ease, margin 0.35s ease;
+        }
+
+        #btnInvertir.visible {
+            opacity: 1;
+            visibility: visible;
+            max-height: 60px;
+        }
+
+        #btnInvertir:hover {
+            background: rgba(0, 212, 170, 0.12);
+        }
+
+        .ejemplos {
+            margin-top: 1.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .ejemplos p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .ejemplos-botones {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .btn-ejemplo {
+            background: var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-ejemplo:hover {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Inversión de texto</h1>
+        <p class="subtitle">Escribe y ve el resultado al instante</p>
+
+        <label for="textoEntrada">Tu texto</label>
+        <input type="text" id="textoEntrada" placeholder="Escribe aquí..." autocomplete="off" />
+
+        <div class="resultado-wrapper">
+            <label>Texto invertido</label>
+            <div class="resultado-linea">
+                <output id="resultado" for="textoEntrada" aria-live="polite">—</output>
+                <button type="button" class="btn btn-copiar" id="btnCopiar" title="Copiar al portapapeles">Copiar</button>
+            </div>
+        </div>
+
+        <button type="button" class="btn" id="btnInvertir" aria-hidden="true">Invertir</button>
+
+        <div class="ejemplos">
+            <p>Ejemplo rápido</p>
+            <div class="ejemplos-botones">
+                <button type="button" class="btn btn-ejemplo" data-ejemplo="AI4Devs">AI4Devs</button>
+                <button type="button" class="btn btn-ejemplo" data-ejemplo="Marcos Benavent">Marcos Benavent</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
